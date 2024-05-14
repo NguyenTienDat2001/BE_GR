@@ -45,6 +45,39 @@ const couponController = {
         }
     },
 
+    getMycoupon: async (req, res) => {
+        try {
+            const user_id = req.userId;
+            
+            const arrcoupons = await db.UserCoupon.findAll({ where: { user_id: user_id } });
+            const coupons = await Promise.all(arrcoupons.map(async (item) => {
+                const coupon = await db.Coupon.findByPk(item.coupon_id);
+                return {
+                    ...coupon.toJSON(),
+                };
+            }));
+            return res.status(200).json({
+                message: 'Successfully',
+                coupon: coupons
+            });
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
+    getGift: async (req, res) => {
+        try {
+            const coupons = await db.Coupon.findAll({ where: { status: "0" } });
+            return res.status(200).json({
+                message: 'Successfully',
+                coupon: coupons
+            });
+        } catch (error) {
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
+
     deleteCoupon: async (req, res) => {
         try {
             const coupon = await db.Coupon.findByPk(req.params.coupon_id);

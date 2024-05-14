@@ -1,6 +1,6 @@
 import express from "express";
 import paymentController from "../controllers/paymentController";
-// import permissionPage from "../middlewares/middlewares";
+import permissionPage from "../middlewares/middlewares";
 // import authentication from "../middlewares/authentication";
 
 let router = express.Router();

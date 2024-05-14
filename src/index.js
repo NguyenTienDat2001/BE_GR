@@ -10,6 +10,7 @@ import initCartRoutes from "./routes/cart";
 import initCouponRoutes from "./routes/coupon";
 import initUserRoutes from "./routes/user";
 import initPaymentRoutes from "./routes/payment";
+import initOrderRoutes from "./routes/order"
 
 import cors from "cors";
 
@@ -47,6 +48,7 @@ initCartRoutes(app);
 initCouponRoutes(app);
 initUserRoutes(app);
 initPaymentRoutes(app);
+initOrderRoutes(app);
 // initProductRouters(app);
 // initWebRoutes(app);
 

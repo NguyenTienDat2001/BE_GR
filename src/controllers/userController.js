@@ -30,6 +30,16 @@ const userController = {
         }
     },
 
+    getInfor: async (req, res) => {
+        try {
+            const user = await db.User.findOne({ where: { id: req.userId } });
+            return res.status(200).json({ message: 'successfully', user: user });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: 'Internal server error' });
+        }
+    },
+
     updatePermiss: async (req, res) => {
         try {
             const { userId, permiss } = req.body;

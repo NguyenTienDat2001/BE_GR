@@ -12,6 +12,8 @@ let initCouponRoutes = (app) => {
 //   router.get("/:id", bookController.getBook);
   router.post("/", permissionPage.checkPermission(3), couponController.addCoupon);
   router.get("/", couponController.getAllCoupons);
+  router.get("/gift", couponController.getGift);
+  router.get("/mycoupon", permissionPage.verifyToken, couponController.getMycoupon);
   router.delete("/:coupon_id", permissionPage.checkPermission(4), couponController.deleteCoupon);
 //   router.post("/search", bookController.searchBook);
 //   router.delete("/:id", bookController.deleteBook);

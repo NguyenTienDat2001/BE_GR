@@ -2,39 +2,32 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    await queryInterface.createTable("coupons", {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("borrows", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      code: {
-        type: Sequelize.STRING,
+      user_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: 'users',
+          },
+          key: 'id'
+        },
         allowNull: false,
       },
-      des: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      type: {
-        type: Sequelize.ENUM('0', '1', '2'),
-      },
-      value: {
+      book_id: {
         type: Sequelize.INTEGER,
-      },
-      point: {
-        type: Sequelize.INTEGER,
-      },
-      condition: {
-        type: Sequelize.INTEGER,
-      },
-      status: {
-        type: Sequelize.ENUM('0', '1', '2'),//0: khởi tạo, 1: đã đổi, 2: đã sử dụng
-      },
-      start_date: {
-        type: Sequelize.DATE,
+        references: {
+          model: {
+            tableName: 'books',
+          },
+          key: 'id'
+        },
         allowNull: false,
       },
       end_date: {
@@ -53,6 +46,11 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable("coupons");
+    /**
+     * Add reverting commands here.
+     *
+     * Example:
+     * await queryInterface.dropTable('users');
+     */
   }
 };
