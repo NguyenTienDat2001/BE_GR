@@ -7,6 +7,10 @@ let router = express.Router();
 let initOrderRoutes = (app) => {
   //   router.post("/login", authController.handleLogin);
   router.get("/", permissionPage.verifyToken, orderController.getOrder);
+  router.get("/all", orderController.getAllOrder);
+  router.post("/", orderController.addOrder);
+  router.post("/cancel", orderController.cancelOrder);
+  router.post("/check", orderController.checkOrder);
   router.get("/:id", orderController.getOrderDetail);
   return app.use("/api/orders", router);
 };

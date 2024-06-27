@@ -1,5 +1,9 @@
 const jwt = require("jsonwebtoken");
 import authService from "../services/authService";
+import db from "../models/index";
+import bcrypt from "bcryptjs";
+const salt = bcrypt.genSaltSync(10);
+const { Op } = require('sequelize');
 
 const authController = {
   handleLogin: async (req, res) => {
@@ -15,16 +19,16 @@ const authController = {
 
     let message = await authService.handleUserLogin(email, password);
     if (message.errorCode !== 0) {
-      return res.status(404).json(message);
+      return res.status(201).json(message);
     }
     const userId = message.data.id
-    const token = jwt.sign({ userId: userId },' ',{ expiresIn: '3d' });
+    const token = jwt.sign({ userId: userId }, ' ', { expiresIn: '3d' });
     return res.status(200).json({
-        errorCode: message.errorCode,
-        message: message.message,
-        data: { ...message.data},
-        token: token
-      });
+      errorCode: message.errorCode,
+      message: message.message,
+      data: { ...message.data },
+      token: token
+    });
   },
 
   // generateAccessToken: (data) => {
@@ -53,7 +57,7 @@ const authController = {
   handleCreateNewUser: async (req, res) => {
     let message = await authService.handleCreateNewUser(req.body);
     if (message.errorCode === 0) return res.status(200).json(message);
-    else return res.status(404).json(message);
+    else return res.status(201).json(message);
   },
 
   logout: async (req, res) => {
@@ -65,8 +69,49 @@ const authController = {
     });
   },
 
+  changePassword: async (req, res) => {
+    try {
+
+      const { email, password, newpass } = req.body;
+      const user = await db.User.findOne({
+        where: { email: email }
+      });
+      if (user) {
+        const checkPassword = await bcrypt.compareSync(password, user.password);
+        if (checkPassword) {
+          let hashPassword = await bcrypt.hashSync(newpass, salt);
+          user.password = hashPassword;
+          user.save();
+          return res.status(200).json({ message: 'Đổi thành công' });
+        }
+        else {
+          return res.status(201).json({ message: 'Sai mật khẩu cũ' });
+        }
+
+      } else {
+        return res.status(201).json({ message: 'Not found' });
+      }
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+
   test: async (req, res) => {
-    return res.status(200).json({ message: req.session })
+    const arrorder = await db.Order.findAll();
+    await Promise.all(arrorder.map(async (item) => {
+      const books = await db.OrderDetail.findAll({ where: { order_id: item.id } });
+      let total = 0;
+      await Promise.all(books.map(async (item) => {
+
+        const book = await db.Book.findByPk(item.book_id);
+        if (book) {
+          total = total + book.sell_price * item.quantity;
+        }
+      }));
+      item.account = total;
+      item.save();
+    }));
+    return res.status(200).json({ message: "successfully" })
   },
 
   verifyUser: async (req, res) => {

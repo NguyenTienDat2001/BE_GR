@@ -10,13 +10,8 @@ let initAuthRoutes = (app) => {
   router.post("/login", authController.handleLogin);
   router.get("/verify", authController.verifyUser);
   router.get("/logout", authController.logout);
+  router.post("/change", authController.changePassword);
   router.get("/test", authController.test);
-  //   router.post("/refresh", authController.requestRefreshToken);
-  //   router.post(
-  //     "/logout",
-  //     authentication.verifyToken,
-  //     authController.handleLogout
-  //   );
 
   return app.use("/api", router);
 };

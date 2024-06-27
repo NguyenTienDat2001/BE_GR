@@ -20,16 +20,28 @@ module.exports = {
         },
         allowNull: false,
       },
+      address: {
+        type: Sequelize.STRING,
+      },
+      receiver: {
+        type: Sequelize.STRING,
+      },
+      phone_number: {
+        type: Sequelize.STRING,
+      },
+      account: {
+        type: Sequelize.INTEGER,
+      },
       status: {
         type: Sequelize.ENUM('-1', '0', '1', '2', '3'),
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
     });
   },

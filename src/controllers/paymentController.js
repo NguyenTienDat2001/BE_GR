@@ -24,7 +24,7 @@ const paymentController = {
       returnUrl = "http://localhost:3000/payment/infor" + "?book_id=" + req.body.book_id + "&user_id=" + req.body.user_id + "&duration=" + req.body.duration;
 
     } else {
-      returnUrl = "http://localhost:3000/payment/infor" + "?order_id=" + orderId;
+      returnUrl = "http://localhost:3000/payment/infor" + "?order_id=" + orderId + "&code=" + req.body.code + "&history_id=" + req.body.history_id;
 
     }
     let amount = req.body.total_price;
@@ -139,17 +139,21 @@ const paymentController = {
 
       }
       else {
+      const { code, history_id } = req.body;
         await db.Transaction.create({
+          order_id: history_id,
           type: 'bank',
-          order_id,
+          infor,
           bank_code,
           amount,
-          infor,
         });
-        await Order.updateOne({ _id: order_id }, { status: '0' });
+        // await db.Order.updateOne({ _id: order_id }, { status: '0' });
+        // const order = await db.Order.findOne({ where: { id: history_id } });
+        // const coupon = await db.Coupon.findOne({ where: { code } });
+        // await order.update({ status: '0' });
+        // await coupon.update({ status: '2' });
         return res.status(200).json({
           message: 'successfully',
-          tran,
         });
       }
 

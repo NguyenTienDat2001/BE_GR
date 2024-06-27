@@ -21,7 +21,7 @@ const authService = {
             } else {
               resolve({
                 errorCode: 1,
-                message: "Wrong password",
+                message: "Sai mật khẩu",
                 data: {},
               });
             }
@@ -29,7 +29,7 @@ const authService = {
             resolve({
               errorCode: 2,
               message:
-                "Your's email isn't exist in your system. Please try other email!",
+                "Email không tồn tại. Vui lòng nhập lại",
               data: {},
             });
           }
@@ -64,7 +64,7 @@ const authService = {
         if (user) {
           resolve({
             errorCode: 1,
-            message: "Email is existed in system",
+            message: "Email đã tồn tại",
           });
         } else {
           let hashPasswordFromBcrypt = await authService.hashUserPassword(
@@ -73,6 +73,7 @@ const authService = {
           await db.User.create({
             ...data,
             password: hashPasswordFromBcrypt,
+            avatar: 'https://i.pinimg.com/236x/2a/65/f9/2a65f948b71ff3a70e21c64bca10a312.jpg'
           });
           resolve({
             errorCode: 0,

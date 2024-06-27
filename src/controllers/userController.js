@@ -80,6 +80,21 @@ const userController = {
         }
     },
 
+    updateProfile: async (req,res) => {
+        try {
+            const { user_id, ...updateData } = req.body;
+            const [updatedRows] = await db.User.update(updateData, { where: { id: user_id } });
+            if (updatedRows > 0) {
+              return res.status(200).json({ message: 'Profile updated successfully' });
+            } else {
+              return res.status(404).json({ message: 'User not found' });
+            }
+          } catch (error) {
+            console.error('Error updating profile:', error);
+            return res.status(500).json({ message: 'Internal server error' });
+          }
+    }
+
 };
 
 module.exports = userController;

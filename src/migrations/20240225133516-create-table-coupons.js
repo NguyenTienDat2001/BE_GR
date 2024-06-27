@@ -33,21 +33,21 @@ module.exports = {
       status: {
         type: Sequelize.ENUM('0', '1', '2'),//0: khởi tạo, 1: đã đổi, 2: đã sử dụng
       },
-      start_date: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
-      end_date: {
-        type: Sequelize.DATE,
-        allowNull: false,
-      },
+      // start_date: {
+      //   type: Sequelize.DATEONLY,
+      //   allowNull: false,
+      // },
+      // end_date: {
+      //   type: Sequelize.DATEONLY,
+      //   allowNull: false,
+      // },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATEONLY,
       },
     });
   },

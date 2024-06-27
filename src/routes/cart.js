@@ -6,20 +6,10 @@ import permissionPage from "../middlewares/middlewares";
 let router = express.Router();
 
 let initCartRoutes = (app) => {
-  //   router.post("/login", authController.handleLogin);
-//   router.get("/", bookController.getAllbook);
-//   router.get("/:id", bookController.getBook);
-  router.post("/add", cartController.addCart);
+  router.post("/add", permissionPage.verifyToken, cartController.addCart);
   router.get("/", permissionPage.verifyToken, cartController.getCart);
-  router.put("/:book_id/:scope", cartController.updateCart);
-  router.delete("/:book_id/", cartController.deleteCart);
-//   router.post("/search", bookController.searchBook);
-//   router.delete("/:id", bookController.deleteBook);
-  // router.get("/:id", bookController.getBook);
-  // router.get("/:id", bookController.getBook);
-  // router.post("/login", authController.handleLogin);
-  // router.get("/verify", authController.verifyUser);
-  // router.get("/logout", authController.logout);
+  router.post("/update", permissionPage.verifyToken, cartController.updateCart);
+  router.delete("/:book_id/", permissionPage.verifyToken, cartController.deleteCart);
   
 
   return app.use("/api/cart", router);

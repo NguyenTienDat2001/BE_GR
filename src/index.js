@@ -10,7 +10,10 @@ import initCartRoutes from "./routes/cart";
 import initCouponRoutes from "./routes/coupon";
 import initUserRoutes from "./routes/user";
 import initPaymentRoutes from "./routes/payment";
-import initOrderRoutes from "./routes/order"
+import initOrderRoutes from "./routes/order";
+import initEventRoutes from "./routes/event";
+import initImexportRoutes from "./routes/imexport";
+import initReportRoutes from "./routes/report";
 
 import cors from "cors";
 
@@ -49,7 +52,9 @@ initCouponRoutes(app);
 initUserRoutes(app);
 initPaymentRoutes(app);
 initOrderRoutes(app);
-// initProductRouters(app);
+initEventRoutes(app);
+initImexportRoutes(app);
+initReportRoutes(app);
 // initWebRoutes(app);
 
 connectDB();

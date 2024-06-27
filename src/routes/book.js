@@ -7,7 +7,10 @@ let router = express.Router();
 
 let initBookRoutes = (app) => {
   //   router.post("/login", authController.handleLogin);
+  router.post("/update", bookController.updateBook);
   router.get("/", permissionPage.verifyToken, bookController.getAllbook);
+  router.get("/bestseller", permissionPage.verifyToken, bookController.getBestSell);
+  router.get("/new", permissionPage.verifyToken, bookController.getNew);
   router.get("/:id", permissionPage.verifyToken, bookController.getBook);
   router.get("/borrow/list", permissionPage.verifyToken, bookController.getBorrowBook);
   router.post("/", permissionPage.checkPermission(1), bookController.addBook);

@@ -20,8 +20,8 @@ module.exports = (sequelize, DataTypes) => {
       point: DataTypes.INTEGER,
       condition: DataTypes.INTEGER,
       status: DataTypes.STRING,
-      start_date: DataTypes.DATE,
-      end_date: DataTypes.DATE,
+      // start_date: DataTypes.DATE,
+      // end_date: DataTypes.DATE,
     },
     {
       sequelize,

@@ -9,14 +9,70 @@ const bookController = {
       const books = await Promise.all(arrbooks.map(async (item) => {
         const bookmark = await db.Bookmark.findOne({ where: { user_id, book_id: item.id } });
         let isbookmark = false
-        if(bookmark) {
+        if (bookmark) {
           isbookmark = true
         }
         return {
           ...item.toJSON(),
           isbookmark: isbookmark
         };
-    }));
+      }));
+      return res.status(200).json({
+        message: 'successfull',
+        books: books
+      });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
+
+  getBestSell: async (req, res) => {
+    try {
+      const user_id = req.userId;
+      const arrbooks = await db.Book.findAll({
+        order: [
+          ['totalsale', 'DESC']
+        ]
+      });
+      const books = await Promise.all(arrbooks.map(async (item) => {
+        const bookmark = await db.Bookmark.findOne({ where: { user_id, book_id: item.id } });
+        let isbookmark = false
+        if (bookmark) {
+          isbookmark = true
+        }
+        return {
+          ...item.toJSON(),
+          isbookmark: isbookmark
+        };
+      }));
+      return res.status(200).json({
+        message: 'successfull',
+        books: books
+      });
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  },
+
+  getNew: async (req, res) => {
+    try {
+      const user_id = req.userId;
+      const arrbooks = await db.Book.findAll({
+        order: [
+          ['createdAt', 'DESC']
+        ]
+      });
+      const books = await Promise.all(arrbooks.map(async (item) => {
+        const bookmark = await db.Bookmark.findOne({ where: { user_id, book_id: item.id } });
+        let isbookmark = false
+        if (bookmark) {
+          isbookmark = true
+        }
+        return {
+          ...item.toJSON(),
+          isbookmark: isbookmark
+        };
+      }));
       return res.status(200).json({
         message: 'successfull',
         books: books
@@ -34,12 +90,12 @@ const bookController = {
       let isborrow = false
       if (borrow) {
         isborrow = true
-      } 
-        return res.status(200).json({
-          message: 'successfull',
-          book: book,
-          isborrow: isborrow
-        });
+      }
+      return res.status(200).json({
+        message: 'successfull',
+        book: book,
+        isborrow: isborrow
+      });
     } catch (error) {
       return res.status(500).send(error);
     }
@@ -62,7 +118,7 @@ const bookController = {
   addBook: async (req, res) => {
     try {
       if (Object.keys(req.body).length === 0) {
-        return res.status(200).json({ message: 'Request body is empty' });
+        return res.status(201).json({ message: 'Request body is empty' });
       }
       const book = await db.Book.findOne({ where: { name: { [Op.like]: `%${req.body.name}%` } } });
       if (book) {
@@ -142,11 +198,38 @@ const bookController = {
     }
   },
 
+  updateBook: async (req, res) => {
+    try {
+      const { book_id, ...updateData } = req.body;
+      const [updatedRows] = await db.Book.update(updateData, { where: { id: book_id } });
+      if (updatedRows > 0) {
+        return res.status(200).json({ message: 'Book updated successfully' });
+      } else {
+        return res.status(201).json({ message: 'Book not found' });
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  },
+
   addChapter: async (req, res) => {
     try {
       if (Object.keys(req.body).length === 0) {
-        return res.status(200).json({ message: 'Request body is empty' });
+        return res.status(201).json({ message: 'Request body is empty' });
       }
+      const { book_id, chapter_id } = req.body;
+      const bookitem = await db.Book.findOne({ where: { id: book_id } });
+      if (!bookitem) {
+        return res.status(202).json({ message: 'Sách không tồn tại' });
+
+      }
+      const chapteritem = await db.Chapter.findOne({ where: { book_id, chapter_id } });
+      if (chapteritem) {
+        return res.status(202).json({ message: 'Trùng chương' });
+
+      }
+
       await db.Chapter.create({
         ...req.body,
       });
@@ -162,7 +245,6 @@ const bookController = {
     try {
       const user_id = req.userId;
       const borrows = await db.Borrow.findAll({ where: { user_id, end_date: { [Op.gt]: new Date() } } });
-      // return res.status(200).json({data: borrows})
       if (borrows.length > 0) {
         const borrowsWithBooks = await Promise.all(borrows.map(async (item) => {
           const book = await db.Book.findByPk(item.book_id);
@@ -189,7 +271,7 @@ const bookController = {
       const user_id = req.userId;
       const { book_id } = req.body;
       if (Object.keys(req.body).length === 0) {
-        return res.status(200).json({ message: 'Request body is empty' });
+        return res.status(201).json({ message: 'Request body is empty' });
       }
       const bookmark = await db.Bookmark.findOne({ where: { user_id, book_id } });
       if (bookmark) {
@@ -237,7 +319,7 @@ const bookController = {
           img: book.img,
           author: book.author,
         };
-    }));
+      }));
       return res.status(200).json({
         message: 'successfull',
         books: books
@@ -246,7 +328,7 @@ const bookController = {
       return res.status(500).send(error);
     }
   },
-  
+
 };
 
 module.exports = bookController;
