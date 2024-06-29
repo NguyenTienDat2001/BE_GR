@@ -23,13 +23,13 @@ let app = express();
 // let session = require('express-session');
 
 // config app
-app.use(
-  cors({
-    origin: process.env.URL_REACT,
-    methods: ["POST", "GET", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
 app.use(session({
   secret: 'your-secret-key', // Chuỗi bí mật để ký và mã hóa các thông tin session
   resave: false, // Không lưu lại session mỗi khi request gửi lên server
