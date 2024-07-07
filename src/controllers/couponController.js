@@ -15,7 +15,7 @@ const couponController = {
     addCoupon: async (req, res) => {
         try {
             if (Object.keys(req.body).length === 0) {
-                return res.status(201).json({ message: 'Request body is empty' });
+                return res.status(200).json({ message: 'Request body is empty' });
             }
             for (let i = 0; i < req.body.number; i++) {
                 const couponCode = couponController.generateRandomCouponCode(8);

@@ -118,7 +118,7 @@ const bookController = {
   addBook: async (req, res) => {
     try {
       if (Object.keys(req.body).length === 0) {
-        return res.status(201).json({ message: 'Request body is empty' });
+        return res.status(200).json({ message: 'Request body is empty' });
       }
       const book = await db.Book.findOne({ where: { name: { [Op.like]: `%${req.body.name}%` } } });
       if (book) {
